@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mydb
+    username: postgres
+    password: Ayush@12345
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  servlet:
+    context-path: /api
+    include-message: always
