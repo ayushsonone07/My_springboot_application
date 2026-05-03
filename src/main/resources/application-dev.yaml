@@ -1,0 +1,30 @@
+spring:
+  config:
+    activate:
+      on-profile: dev              # activates only when profile = dev
+  main:
+    banner-mode: console           # ✅ banner ON
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/mydb}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update             # auto create/update tables
+    show-sql: true                 # ✅ show SQL queries in console
+  redis:
+    host: ${REDIS_HOST:127.0.0.1}
+    port: ${REDIS_PORT:6379}
+
+server:
+  port: 8080 # dev runs on 8080
+  servlet:
+    context-path: /api
+  error:
+    include-message: always     # ✅ Fixed placement
+
+logging:
+  level:
+    root: DEBUG                    # ✅ full logs in dev
+    org.springframework: INFO
+    org.hibernate.SQL: DEBUG

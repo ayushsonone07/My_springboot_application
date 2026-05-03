@@ -1,0 +1,21 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  main:
+    banner-mode: off               # ❌ banner OFF
+  datasource:
+    url: jdbc:postgresql://prod-server:5432/mydb
+    username: ${DB_USER}           # use env variables in prod
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: none               # ❌ never auto-change schema in prod
+    show-sql: false                # ❌ hide SQL in prod
+
+server:
+  port: 80
+
+logging:
+  level:
+    root: ERROR                    # only errors in prod
