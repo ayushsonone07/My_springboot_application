@@ -2,6 +2,8 @@ package net.engineeringdigest.journalApp.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.engineeringdigest.journalApp.constants.ApiStatus;
+import net.engineeringdigest.journalApp.dto.ApiResponse;
 import net.engineeringdigest.journalApp.dto.AuthRequest;
 import net.engineeringdigest.journalApp.dto.AuthResponse;
 import net.engineeringdigest.journalApp.dto.RefreshTokenRequest;
@@ -48,9 +50,13 @@ public class AuthController {
 
     // Login
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<ApiResponse<AuthResponse>> login(@RequestBody AuthRequest request) {
+        AuthResponse authResponse = authService.login(request);
 
-        return ResponseEntity.ok(authService.login(request));
+        log.info("AuthResponse: {}", authResponse);         // check if null
+        log.info("Token: {}", authResponse.getToken());     // check token value
+
+        return ResponseEntity.ok(ApiResponse.success("Login SuccessFull ",authService.login(request)));
 
     }
 

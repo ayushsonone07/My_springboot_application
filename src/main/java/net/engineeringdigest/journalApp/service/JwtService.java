@@ -5,27 +5,36 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.engineeringdigest.journalApp.entity.RefreshToken;
+import net.engineeringdigest.journalApp.entity.User;
+import net.engineeringdigest.journalApp.repository.RefreshTokenRepository;
+import net.engineeringdigest.journalApp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;   // ✅ correct
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.time.Instant;
 import java.util.Date;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class JwtService {
 
     @Value("${jwt.secret}")           // ✅ Spring @Value reads from yml
     private String secret;
 
-    @Value("${jwt.expiration}")       // ✅ Spring @Value reads from yml
-    private long expiration;
+    @Value("${jwt.refresh-token}")    // ✅ Spring @Value reads from yml
+    private long refreshTokenExpiry;
 
-    @Value("${jwt.refresh-token}")
-    private long refreshToken;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final UserRepository userRepository;
 
     // Generate token
     public String generateToken(String username) {
@@ -36,6 +45,50 @@ public class JwtService {
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 ))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    //Refresh Token
+    @Transactional
+    public RefreshToken createRefreshToken(String email){
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not Found!"));
+
+        refreshTokenRepository.deleteByUser(user); // needs transaction
+
+        RefreshToken refreshToken = RefreshToken.builder()
+                .user(user)
+                .token(UUID.randomUUID().toString())
+                .expiryDate(Instant.now().plusMillis(refreshTokenExpiry))
+                .build();
+
+        return refreshTokenRepository.save(refreshToken);
+    }
+
+    //Verify Refresh Token
+    public RefreshToken verifyRefreshToken(String token){
+
+        RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
+                .orElseThrow(() -> new RuntimeException("Refresh Token Not Found!"));
+
+        if(refreshToken.isExpired()) {
+
+            refreshTokenRepository.delete(refreshToken);
+            throw new RuntimeException("Refresh Token Expired - Login again!");
+
+        }
+
+        return  refreshToken;
+    }
+
+    //Delete User
+    public void deleteByEmail(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found!"));
+
+        refreshTokenRepository.deleteByUser(user);
+
     }
 
     // Extract username from token
