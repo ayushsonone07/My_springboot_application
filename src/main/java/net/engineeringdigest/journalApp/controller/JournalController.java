@@ -17,7 +17,11 @@ public class JournalController {
     private JournalService service;
 
     @GetMapping
-    public List<JournalDTO> getAll() { return service.getAllJournals(); }
+    public List<JournalDTO> getAll() {
+        System.out.println("Get All Controller Ke Andar");
+
+        return service.getAllJournals();
+    }
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody JournalDTO dto){

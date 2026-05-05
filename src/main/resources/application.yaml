@@ -1,4 +1,8 @@
 spring:
+  application:
+    name: MyApp
+  profiles:
+    active: dev
   datasource:
     url: jdbc:postgresql://localhost:5432/mydb
     username: postgres
@@ -13,7 +17,18 @@ spring:
       ddl-auto: update
     show-sql: true
 
+jwt:
+  secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+  expiration: 86400000 #24 hours
+  refresh-token: 604800000 #7 Days
+  refresh-token-cookie-name: refreshtoken
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
 server:
   servlet:
     context-path: /api
     include-message: always
+
