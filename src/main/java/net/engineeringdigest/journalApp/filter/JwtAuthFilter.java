@@ -30,7 +30,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
         log.info("Request path: {}", path);    // ✅ shows exact path Spring sees
-        return path.startsWith("/auth/");
+        return path.startsWith("/auth/") ||
+               path.startsWith("/health-check");
     }
 
     @Override

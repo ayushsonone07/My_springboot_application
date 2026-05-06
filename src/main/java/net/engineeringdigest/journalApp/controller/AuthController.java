@@ -39,39 +39,32 @@ public class AuthController {
 
     // Register
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody AuthRequest request) {
+    public ApiResponse<AuthResponse> register(@RequestBody AuthRequest request) {
 
-        return ResponseEntity.ok(authService.register(request)).ok(Map.of(
-                "message", "User Registered Sucessfully",
-                "Data", request
-        ));
+        return ApiResponse.created("Registration Successful",authService.register(request));
 
     }
 
     // Login
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<AuthResponse>> login(@RequestBody AuthRequest request) {
-        AuthResponse authResponse = authService.login(request);
+    public ApiResponse<AuthResponse> login(@RequestBody AuthRequest request) {
 
-        log.info("AuthResponse: {}", authResponse);         // check if null
-        log.info("Token: {}", authResponse.getToken());     // check token value
-
-        return ResponseEntity.ok(ApiResponse.success("Login SuccessFull ",authService.login(request)));
+        return ApiResponse.success("Login Successful",authService.login(request));
 
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refresh(@RequestBody RefreshTokenRequest request){
+    public ApiResponse<AuthResponse> refresh(@RequestBody RefreshTokenRequest request){
 
-        return  ResponseEntity.ok(authService.refreshToken(request));
+        return  ApiResponse.success(authService.refreshToken(request));
 
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(@RequestBody Map<String, String> request){
+    public ApiResponse<String> logout(@RequestBody Map<String, String> request){
 
         authService.logout(request.get("email"));
-        return ResponseEntity.ok("Logged out Successfully!");
+        return ApiResponse.success("Logged out Successfully!");
 
     }
 

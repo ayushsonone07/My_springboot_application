@@ -1,6 +1,7 @@
 package net.engineeringdigest.journalApp.controller;
 
 import net.engineeringdigest.journalApp.dto.ApiResponse;
+import net.engineeringdigest.journalApp.dto.AuthResponse;
 import net.engineeringdigest.journalApp.dto.JournalDTO;
 import net.engineeringdigest.journalApp.entity.Journal;
 import net.engineeringdigest.journalApp.service.JournalService;
@@ -19,16 +20,15 @@ public class JournalController {
 
     @GetMapping
     public List<JournalDTO> getAll() {
-        System.out.println("Get All Controller Ke Andar");
+//        System.out.println("Get All Controller Ke Andar");
 
         return service.getAllJournals();
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody JournalDTO dto){
-        Journal journal = service.createJournal(dto);
+    public ResponseEntity<ApiResponse<Journal>> create(@RequestBody JournalDTO dto){
 
-        return ResponseEntity.status(201).body(ApiResponse.created(journal));
+        return ResponseEntity.ok(ApiResponse.created("Journal Created!",service.createJournal(dto)));
     }
 
 }

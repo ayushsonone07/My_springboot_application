@@ -1,5 +1,7 @@
 package net.engineeringdigest.journalApp.controller;
 
+import net.engineeringdigest.journalApp.dto.ApiResponse;
+import net.engineeringdigest.journalApp.dto.AuthResponse;
 import net.engineeringdigest.journalApp.dto.ProductDTO;
 import net.engineeringdigest.journalApp.dto.UserDTO;
 import net.engineeringdigest.journalApp.entity.Product;
@@ -25,31 +27,24 @@ public class UserController {
     public User getById(@PathVariable Long id) { return service.getUserById(id);}
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody UserDTO dto) {
-        User user = service.createUser(dto);
+    public ApiResponse<?> create(@RequestBody UserDTO dto) {
 
-        return ResponseEntity.ok(Map.of(
-                "message", "User Created Sucessfully",
-                "product" , user
-        ));
+        return ApiResponse.created("User Created Sucessfully", service.createUser(dto));
+
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UserDTO dto) {
-        User user = service.updateUser(id, dto);
+    public ApiResponse<?> update(@PathVariable Long id, @RequestBody UserDTO dto) {
 
-        return ResponseEntity.ok(Map.of(
-                "message", "Product Updated Sucessfully",
-                "product" , user
-        ));
+        return ApiResponse.success("User Updated Sucessfully", service.updateUser(id, dto));
+
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        service.deleteUser(id);
+    public ApiResponse<?> delete(@PathVariable Long id) {
 
-        return ResponseEntity.ok(Map.of(
-                "message" , "Product Deleted Sucessfully!"
-        ));
+        service.deleteUser(id);
+        return ApiResponse.success("User Deleted Sucessfully!");
+
     }
 }

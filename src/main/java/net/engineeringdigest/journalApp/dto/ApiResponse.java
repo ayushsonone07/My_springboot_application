@@ -41,12 +41,12 @@ public class ApiResponse<T> {
         return new ApiResponse<>(ApiStatus.SUCCESS, message, data);
     }
 
-    public static <T> ApiResponse<T> created(T data){
-        return new ApiResponse<>(ApiStatus.CREATED, null, data);
+    public static <T> ApiResponse<T> created(String message ,T data){
+        return new ApiResponse<>(ApiStatus.CREATED, message, data);
     }
 
-    public static <T> ApiResponse<T> error(ApiStatus status, String message) {
-        return new ApiResponse<>(status, message, null);
+    public static <T> ApiResponse<T> error(String message) {
+        return new ApiResponse<>(ApiStatus.BAD_REQUEST, message, null);
     }
 
     public static <T> ApiResponse<T> of(ApiStatus status, String message, T data){

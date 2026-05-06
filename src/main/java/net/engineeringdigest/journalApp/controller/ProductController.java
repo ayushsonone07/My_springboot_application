@@ -1,5 +1,6 @@
 package net.engineeringdigest.journalApp.controller;
 
+import net.engineeringdigest.journalApp.dto.ApiResponse;
 import net.engineeringdigest.journalApp.dto.ProductDTO;
 import net.engineeringdigest.journalApp.entity.Product;
 import net.engineeringdigest.journalApp.service.ProductService;
@@ -24,35 +25,30 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public Product getById(@PathVariable Long id) {
+
         return service.getProductById(id);
+
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody ProductDTO dto) {
-        Product product = service.createProduct(dto);
+    public ApiResponse<?> create(@RequestBody ProductDTO dto) {
 
-        return ResponseEntity.ok(Map.of(
-        "message", "Product Created Sucessfully",
-        "product" , product
-        ));
+        return ApiResponse.created("Product Created Sucessfully", service.createProduct(dto));
+
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody ProductDTO dto) {
-        Product product = service.updateProduct(id, dto);
+    public ApiResponse<?> update(@PathVariable Long id, @RequestBody ProductDTO dto) {
 
-        return ResponseEntity.ok(Map.of(
-           "message", "Product Updated Sucessfully",
-           "product" , product
-        ));
+        return ApiResponse.success("Product Updated Sucessfully",service.updateProduct(id, dto));
+
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        service.deleteProduct(id);
+    public ApiResponse<?> delete(@PathVariable Long id) {
 
-        return ResponseEntity.ok(Map.of(
-        "message" , "Product Deleted Sucessfully!"
-        ));
+        service.deleteProduct(id);
+        return ApiResponse.success("Product Deleted Sucessfully!");
+
     }
 }

@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()   // public
+                        .requestMatchers("/auth/**",  "/health-check").permitAll()   // public
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()                  // everything else needs JWT
                 )
